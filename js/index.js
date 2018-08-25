@@ -5,6 +5,7 @@ let screen = document.querySelector('#screen'),
     clear = document.querySelector('#clear'),
     zero = document.querySelector('#zero'),
     equals = document.querySelector('#equals'),
+    dataArray = [undefined, undefined, undefined],
     firstNumber,
     operator,
     secondNumber,
@@ -18,6 +19,7 @@ function numbersDo(numberElement) {
         } else {
             screen.textContent += numberElement.textContent
         }
+        console.log(dataArray)
     });
 };
 
@@ -25,9 +27,15 @@ function operatorsDo(operatorElement) {
     operatorElement.addEventListener('click', function () {
         if (screen.textContent === '') {
             alert('Starting with nothing is a hard road! i am in operators do')
+        } else if (dataArray[1]) {
+            dataArray[1] = operatorElement.textContent
+            screen.textContent = dataArray.join('')
         } else {
-            screen.textContent += operatorElement.textContent
+            dataArray[0] = screen.textContent
+            dataArray[1] = operatorElement.textContent
+            screen.textContent = dataArray.join('')
         }
+        console.log(dataArray)
     });
 };
 
