@@ -6,11 +6,17 @@ let screen = document.querySelector('#screen'),
     zero = document.querySelector('#zero'),
     equals = document.querySelector('#equals'),
     firstNumber,
-    operator,
+    mathSymbol,
     secondNumber,
-    totalvalue;
-
 // FUNCTIONS
+
+function clearAll() {
+    screen.textContent = ''
+    firstNumber = undefined
+    mathSymbol = undefined
+    secondNumber = undefined
+}
+
 function numbersDo(numberElement) {
     numberElement.addEventListener('click', function () {
         if (numberElement.textContent === '0' && screen.textContent === '') {
@@ -21,19 +27,43 @@ function numbersDo(numberElement) {
     });
 };
 
+function doMath() {
+    switch (mathSymbol) {
+        case 'x':
+        firstNumber = firstNumber * secondNumber
+            break;
+        case '÷':
+        firstNumber = firstNumber / secondNumber
+            break;
+        case '+':
+        firstNumber = firstNumber + secondNumber
+            break;
+        case '-':
+        firstNumber = firstNumber - secondNumber
+            break;
+    }
+    secondNumber = undefined
+    mathSymbol = undefined
+    screen.textContent = firstNumber
+}
+
 function operatorsDo(operatorElement) {
     operatorElement.addEventListener('click', function () {
-        if (screen.textContent === '') {
-            alert('Starting with nothing is a hard road! i am in operators do')
+        if (firstNumber) {
+            secondNumber = parseInt(screen.textContent)
+            doMath()
         } else {
-            screen.textContent += operatorElement.textContent
+            firstNumber = parseInt(screen.textContent)
+            mathSymbol = operatorElement.textContent
+            screen.textContent = ''
         }
     });
 };
 
 function clearDoes(clearElement) {
     clearElement.addEventListener('click', function () {
-        screen.textContent = ''
+        clearAll()
+        console.log(firstNumber, mathSymbol, secondNumber);
     });
 };
 
