@@ -5,9 +5,9 @@ let screen = document.querySelector('#screen'),
     clear = document.querySelector('#clear'),
     zero = document.querySelector('#zero'),
     equals = document.querySelector('#equals'),
-    firstNumber = undefined,
-    mathSymbol = undefined,
-    secondNumber = undefined;
+    firstNumber = '',
+    mathSymbol = '',
+    secondNumber = '';
 
 // FUNCTIONS
 
@@ -19,6 +19,8 @@ function error() {
 }
 
 function doMath() {
+    firstNumber = parseInt(firstNumber)
+    secondNumber = parseInt(secondNumber)
     switch (mathSymbol) {
         case 'x':
             firstNumber = firstNumber * secondNumber
@@ -37,14 +39,16 @@ function doMath() {
 
 function numbersDo(number) {
     number.addEventListener('click', function () {
+        
         if (number.textContent === '0' && screen.textContent === '') {
             error()
         } else if (mathSymbol) {
-            screen.textContent = ''
+            secondNumber += number.textContent
             screen.textContent += number.textContent
         } else {
             screen.textContent += number.textContent
         }
+        console.log(secondNumber);
     });
 };
 
@@ -55,8 +59,9 @@ function operatorsDo(operator) {
         } else if (firstNumber) {
             mathSymbol = operator.textContent
             screen.textContent = firstNumber + mathSymbol
+            secondNumber = ''
         } else {
-            firstNumber = parseInt(screen.textContent)
+            firstNumber = screen.textContent
             mathSymbol = operator.textContent
             screen.textContent = firstNumber + mathSymbol
         }
@@ -66,11 +71,10 @@ function operatorsDo(operator) {
 function equalDoes(equal) {
     equal.addEventListener('click', function () {
         if (firstNumber) {
-            secondNumber = parseInt(screen.textContent)
             doMath()
             screen.textContent = firstNumber
-            secondNumber = undefined
-            mathSymbol = undefined
+            secondNumber = ''
+            mathSymbol = ''
         }
     })
 }
@@ -78,9 +82,9 @@ function equalDoes(equal) {
 function clearDoes(clear) {
     clear.addEventListener('click', function () {
         screen.textContent = ''
-        firstNumber = undefined
-        mathSymbol = undefined
-        secondNumber = undefined
+        firstNumber = ''
+        mathSymbol = ''
+        secondNumber = ''
     });
 };
 
