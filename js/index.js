@@ -5,58 +5,95 @@ let screen = document.querySelector('#screen'),
     clear = document.querySelector('#clear'),
     zero = document.querySelector('#zero'),
     equals = document.querySelector('#equals'),
-    dataArray = [undefined, undefined, undefined],
-    firstNumber,
-    operator,
-    secondNumber,
-    totalvalue;
+    firstNumber = undefined,
+    mathSymbol = undefined,
+    secondNumber = undefined;
 
 // FUNCTIONS
-function numbersDo(numberElement) {
-    numberElement.addEventListener('click', function () {
-        if (numberElement.textContent === '0' && screen.textContent === '') {
-            alert('Starting with nothing is a hard road! i am in numbersDo')
-        } else {
-            screen.textContent += numberElement.textContent
-        }
-        console.log(dataArray)
-    });
-};
 
-function operatorsDo(operatorElement) {
-    operatorElement.addEventListener('click', function () {
-        if (screen.textContent === '') {
-            alert('Starting with nothing is a hard road! i am in operators do')
-        } else if (dataArray[1]) {
-            dataArray[1] = operatorElement.textContent
-            screen.textContent = dataArray.join('')
-        } else {
-            dataArray[0] = screen.textContent
-            dataArray[1] = operatorElement.textContent
-            screen.textContent = dataArray.join('')
-        }
-        console.log(dataArray)
-    });
-};
-
-function clearDoes(clearElement) {
-    clearElement.addEventListener('click', function () {
+function error() {
+    screen.textContent = 'ERROR';
+    setTimeout(() => {
         screen.textContent = ''
+    }, 1000)
+}
+
+function doMath() {
+    switch (mathSymbol) {
+        case 'x':
+            firstNumber = firstNumber * secondNumber
+            break;
+        case '÷':
+            firstNumber = firstNumber / secondNumber
+            break;
+        case '+':
+            firstNumber = firstNumber + secondNumber
+            break;
+        case '-':
+            firstNumber = firstNumber - secondNumber
+            break;
+    }
+}
+
+function numbersDo(number) {
+    number.addEventListener('click', function () {
+        if (number.textContent === '0' && screen.textContent === '') {
+            error()
+        } else if (mathSymbol) {
+            screen.textContent = ''
+            screen.textContent += number.textContent
+        } else {
+            screen.textContent += number.textContent
+        }
+    });
+};
+
+function operatorsDo(operator) {
+    operator.addEventListener('click', function () {
+        if (screen.textContent === '0' || '') {
+            error()
+        } else if (firstNumber) {
+            mathSymbol = operator.textContent
+            screen.textContent = firstNumber + mathSymbol
+        } else {
+            firstNumber = parseInt(screen.textContent)
+            mathSymbol = operator.textContent
+            screen.textContent = firstNumber + mathSymbol
+        }
+    });
+};
+
+function equalDoes(equal) {
+    equal.addEventListener('click', function () {
+        if (firstNumber) {
+            secondNumber = parseInt(screen.textContent)
+            doMath()
+            screen.textContent = firstNumber
+            secondNumber = undefined
+            mathSymbol = undefined
+        }
+    })
+}
+
+function clearDoes(clear) {
+    clear.addEventListener('click', function () {
+        screen.textContent = ''
+        firstNumber = undefined
+        mathSymbol = undefined
+        secondNumber = undefined
     });
 };
 
 document.addEventListener('DOMContentLoaded', function () {
-
     // Main Invocation
     allButtons.forEach(element => {
         if (element === clear) {
-            // console.log('i am clear', element)
             clearDoes(element)
+        } else if (element === equals) {
+            equalDoes(element)
         } else if (element.className === 'operator') {
-            // console.log('we are operators', element)
             operatorsDo(element)
         } else {
-            // console.log('we are numbers', element)
             numbersDo(element)
         }
     });
