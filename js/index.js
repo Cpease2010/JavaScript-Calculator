@@ -5,86 +5,96 @@ let screen = document.querySelector('#screen'),
     clear = document.querySelector('#clear'),
     zero = document.querySelector('#zero'),
     equals = document.querySelector('#equals'),
-    firstNumber,
-    mathSymbol,
-    screenLength,
-    secondNumber;
+    firstNumber = undefined,
+    mathSymbol = undefined,
+    secondNumber = undefined;
 
-// Main Invocation
-document.addEventListener('DOMContentLoaded', function () {
-    allButtons.forEach(element => {
-        if (element === clear) {
-            clearDoes(element);
-        } else if (element.className === 'operator') {
-            operatorsDo(element);
-        } else {
-            numbersDo(element);
-        };
-    });
-});
+// FUNCTIONS
 
-    // FUNCTIONS
-
-function numbersDo(numberElement) {
-    numberElement.addEventListener('click', function () {
-        if (numberElement.textContent === '0' && screen.textContent === '') {
-            screen.textContent = 'ERROR'
-        } else {
-            screen.textContent += numberElement.textContent
-        };
-    });
-};
-
-function operatorsDo(operatorElement) {
-    operatorElement.addEventListener('click', function () {
-        if (screen.textContent === '' || screen.textContent === 'ERROR') {
-            screen.textContent = 'ERROR'
-        } else if (operatorElement === equals && firstNumber) {
-            doMath();
-        } else if (screen.textContent === '0') {
-            alert('I CANNOT START WITH 0!')
-        } else if (firstNumber) {
-            doMath();
-            mathSymbol = operatorElement.textContent
-            screen.textContent += operatorElement.textContent
-            screenLength = screen.textContent.length
-        } else {            
-            firstNumber = parseInt(screen.textContent);
-            mathSymbol = operatorElement.textContent;
-            screen.textContent += operatorElement.textContent;
-            screenLength = screen.textContent.length
-        };
-    });
-};
-
-function clearDoes(clearElement) {
-    clearElement.addEventListener('click', function () {
-        screen.textContent = '';
-        firstNumber = undefined;
-        mathSymbol = undefined;
-        secondNumber = undefined;
-    });
-};
+function error() {
+    screen.textContent = 'ERROR';
+    setTimeout(() => {
+        screen.textContent = ''
+    }, 1000)
+}
 
 function doMath() {
-    secondNumber = parseInt(screen.textContent.slice(screenLength,))
-    console.log(secondNumber)
     switch (mathSymbol) {
         case 'x':
-        firstNumber = firstNumber * secondNumber
+            firstNumber = firstNumber * secondNumber
             break;
         case '÷':
-        firstNumber = firstNumber / secondNumber
+            firstNumber = firstNumber / secondNumber
             break;
         case '+':
-        firstNumber = firstNumber + secondNumber
+            firstNumber = firstNumber + secondNumber
             break;
         case '-':
-        firstNumber = firstNumber - secondNumber
+            firstNumber = firstNumber - secondNumber
             break;
-    };
-    secondNumber = undefined;
-    mathSymbol = undefined;
-    screen.textContent = firstNumber;
+    }
+}
+
+function numbersDo(number) {
+    number.addEventListener('click', function () {
+        if (number.textContent === '0' && screen.textContent === '') {
+            error()
+        } else if (mathSymbol) {
+            screen.textContent = ''
+            screen.textContent += number.textContent
+        } else {
+            screen.textContent += number.textContent
+        }
+    });
 };
 
+function operatorsDo(operator) {
+    operator.addEventListener('click', function () {
+        if (screen.textContent === '0' || '') {
+            error()
+        } else if (firstNumber) {
+            mathSymbol = operator.textContent
+            screen.textContent = firstNumber + mathSymbol
+        } else {
+            firstNumber = parseInt(screen.textContent)
+            mathSymbol = operator.textContent
+            screen.textContent = firstNumber + mathSymbol
+        }
+    });
+};
+
+function equalDoes(equal) {
+    equal.addEventListener('click', function () {
+        if (firstNumber) {
+            secondNumber = parseInt(screen.textContent)
+            doMath()
+            screen.textContent = firstNumber
+            secondNumber = undefined
+            mathSymbol = undefined
+        }
+    })
+}
+
+function clearDoes(clear) {
+    clear.addEventListener('click', function () {
+        screen.textContent = ''
+        firstNumber = undefined
+        mathSymbol = undefined
+        secondNumber = undefined
+    });
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Main Invocation
+    allButtons.forEach(element => {
+        if (element === clear) {
+            clearDoes(element)
+        } else if (element === equals) {
+            equalDoes(element)
+        } else if (element.className === 'operator') {
+            operatorsDo(element)
+        } else {
+            numbersDo(element)
+        }
+    });
+});
