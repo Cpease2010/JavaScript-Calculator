@@ -5,80 +5,99 @@ let screen = document.querySelector('#screen'),
     clear = document.querySelector('#clear'),
     zero = document.querySelector('#zero'),
     equals = document.querySelector('#equals'),
-    firstNumber,
-    mathSymbol,
-    secondNumber,
+    firstNumber = '',
+    mathSymbol = '',
+    secondNumber = '';
+
 // FUNCTIONS
 
-function clearAll() {
-    screen.textContent = ''
-    firstNumber = undefined
-    mathSymbol = undefined
-    secondNumber = undefined
+function error() {
+    screen.textContent = 'ERROR';
+    setTimeout(() => {
+        screen.textContent = ''
+    }, 1000)
 }
-
-function numbersDo(numberElement) {
-    numberElement.addEventListener('click', function () {
-        if (numberElement.textContent === '0' && screen.textContent === '') {
-            alert('Starting with nothing is a hard road! i am in numbersDo')
-        } else {
-            screen.textContent += numberElement.textContent
-        }
-    });
-};
 
 function doMath() {
+    firstNumber = parseInt(firstNumber)
+    secondNumber = parseInt(secondNumber)
     switch (mathSymbol) {
         case 'x':
-        firstNumber = firstNumber * secondNumber
+            firstNumber = firstNumber * secondNumber
             break;
         case '÷':
-        firstNumber = firstNumber / secondNumber
+            firstNumber = firstNumber / secondNumber
             break;
         case '+':
-        firstNumber = firstNumber + secondNumber
+            firstNumber = firstNumber + secondNumber
             break;
         case '-':
-        firstNumber = firstNumber - secondNumber
+            firstNumber = firstNumber - secondNumber
             break;
     }
-    secondNumber = undefined
-    mathSymbol = undefined
-    screen.textContent = firstNumber
 }
 
-function operatorsDo(operatorElement) {
-    operatorElement.addEventListener('click', function () {
-        if (firstNumber) {
-            secondNumber = parseInt(screen.textContent)
-            doMath()
+function numbersDo(number) {
+    number.addEventListener('click', function () {
+        
+        if (number.textContent === '0' && screen.textContent === '') {
+            error()
+        } else if (mathSymbol) {
+            secondNumber += number.textContent
+            screen.textContent += number.textContent
         } else {
-            firstNumber = parseInt(screen.textContent)
-            mathSymbol = operatorElement.textContent
-            screen.textContent = ''
+            screen.textContent += number.textContent
+        }
+        console.log(secondNumber);
+    });
+};
+
+function operatorsDo(operator) {
+    operator.addEventListener('click', function () {
+        if (screen.textContent === '0' || '') {
+            error()
+        } else if (firstNumber) {
+            mathSymbol = operator.textContent
+            screen.textContent = firstNumber + mathSymbol
+            secondNumber = ''
+        } else {
+            firstNumber = screen.textContent
+            mathSymbol = operator.textContent
+            screen.textContent = firstNumber + mathSymbol
         }
     });
 };
 
-function clearDoes(clearElement) {
-    clearElement.addEventListener('click', function () {
-        clearAll()
-        console.log(firstNumber, mathSymbol, secondNumber);
+function equalDoes(equal) {
+    equal.addEventListener('click', function () {
+        if (firstNumber) {
+            doMath()
+            screen.textContent = firstNumber
+            secondNumber = ''
+            mathSymbol = ''
+        }
+    })
+}
+
+function clearDoes(clear) {
+    clear.addEventListener('click', function () {
+        screen.textContent = ''
+        firstNumber = ''
+        mathSymbol = ''
+        secondNumber = ''
     });
 };
 
 document.addEventListener('DOMContentLoaded', function () {
-
     // Main Invocation
     allButtons.forEach(element => {
         if (element === clear) {
-            // console.log('i am clear', element)
             clearDoes(element)
+        } else if (element === equals) {
+            equalDoes(element)
         } else if (element.className === 'operator') {
-            // console.log('we are operators', element)
             operatorsDo(element)
         } else {
-            // console.log('we are numbers', element)
             numbersDo(element)
         }
     });
