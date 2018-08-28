@@ -1,7 +1,7 @@
 # Browser Calculator
 
 ## Deployed Link
-[a link](corysCalculator.surge.sh)
+[Cory's Calculator](http://www.corysCalculator.surge.sh)
 
 Use DOM Manipulation to build a basic calculator using the provided HTML and CSS.
 
