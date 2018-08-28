@@ -5,7 +5,7 @@ let screen = document.querySelector('#screen'),
     equals = document.querySelector('#equals'),
     firstNumber = '',
     mathSymbol = '',
-    secondNumber = '';
+    secondNumber = ''
 
 // Main Invocation
 
@@ -15,11 +15,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (element === clear) {
             clearDoes(element)
         } else if (element === equals) {
-            equalDoes(element)
+            pressEquals(element)
         } else if (element.className === 'operator') {
-            operatorsDo(element)
+            pressOperator(element)
         } else {
-            numbersDo(element)
+            numberInput(element)
         }
     })
 })
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function error() {
     // Handles Error Loading
-    screen.textContent = 'ERROR';
+    screen.textContent = 'ERROR'
     setTimeout(() => {
         screen.textContent = ''
     }, 1000)
@@ -41,20 +41,20 @@ function doMath() {
     switch (mathSymbol) {
         case 'x':
             firstNumber = firstNumber * secondNumber
-            break;
+            break
         case '÷':
             firstNumber = firstNumber / secondNumber
-            break;
+            break
         case '+':
             firstNumber = firstNumber + secondNumber
-            break;
+            break
         case '-':
             firstNumber = firstNumber - secondNumber
-            break;
+            break
     }
 }
 
-function numbersDo(number) {
+function numberInput(number) {
     // Handles Number Input Logic
     number.addEventListener('click', function () {
         if (number.textContent === '0' && screen.textContent === '') {
@@ -70,7 +70,7 @@ function numbersDo(number) {
     })
 }
 
-function operatorsDo(operator) {
+function pressOperator(operator) {
     // Handles Operator Input Logic
     operator.addEventListener('click', function () {
         if (screen.textContent === '0' || screen.textContent === '') {
@@ -87,7 +87,7 @@ function operatorsDo(operator) {
     })
 }
 
-function equalDoes(equal) {
+function pressEquals(equal) {
     //Handles Equals Input Logic
     equal.addEventListener('click', function () {
         if (firstNumber) {
